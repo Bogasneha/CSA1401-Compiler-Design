@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+int is_ambiguous_grammar(char *grammar[]) {
+  int n = sizeof(grammar) / sizeof(grammar[0]);
+  int i, j, k;
+  for (i = 0; i < n; i++) {
+    for (j = 0; grammar[i][j] != '\0'; j++) {
+      if (grammar[i][j] == grammar[i][0]) {
+        return 1;
+      }
+    }
+  }
+  for (i = 0; i < n; i++) {
+    for (j = 0; grammar[i][j] != '\0'; j++) {
+      for (k = j + 1; grammar[i][k] != '\0'; k++) {
+        if (grammar[i][j] == grammar[i][k]) {
+          return 1;
+        }
+      }
+    }
+  }
+
+  return 0;
+}
+
+int main() {
+  char *grammar[] = {
+    "S -> aB | bA",
+    "B -> bB | @",
+    "A -> aA | @"
+  };
+
+  int n = sizeof(grammar) / sizeof(grammar[0]);
+
+  if (is_ambiguous_grammar(grammar)) {
+    printf("The grammar is ambiguous.\n");
+  } else {
+    printf("The grammar is unambiguous.\n");
+  }
+
+  return 0;
+}
+
+OUTPUT:
+The grammar is ambiguous.
+
+--------------------------------
+Process exited after 0.03578 seconds with return value 0
+Press any key to continue . . .
