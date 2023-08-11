@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    char s[1000], temp[100];
+    char arr[10][2][100];
+    int flag = 0, index = 0;
+    int i;
+    FILE *inputFile = fopen("input.txt", "r");
+    FILE *outputFile = fopen("output.txt", "w");
+
+    if (inputFile == NULL) {
+        perror("Error opening input.txt");
+        return 1;
+    }
+
+    if (outputFile == NULL) {
+        perror("Error opening output.txt");
+        return 1;
+    }
+
+    while (fgets(s, sizeof(s), inputFile) != NULL) {
+        flag = 0;
+        char *line = strdup(s);
+        strcpy(temp, strchr(line, '=') + 1);
+
+        for (i = 0; i < index; i++) {
+            if (strcmp(temp, arr[i][1]) == 0) {
+                flag = 1;
+                break;
+            } else if (strstr(temp, arr[i][1]) != NULL) {
+                char *replace = strstr(line, arr[i][1]);
+                while (replace != NULL) {
+                    memcpy(replace, arr[i][0], strlen(arr[i][0]));
+                    replace = strstr(replace + 1, arr[i][1]);
+                }
+            }
+        }
+
+        if (flag == 0) {
+            strcpy(arr[index][0], strtok(s, "="));
+            strcpy(arr[index][1], temp);
+            index++;
+            fprintf(outputFile, "%s", s);
+        }
+
+        free(line);
+    }
+
+    fclose(inputFile);
+    fclose(outputFile);
+
+    return 0;
+}
+INPUT:
+temp1=a-b
+temp2=a-b+c
+temp3=d-e
+temp4=c
+temp5=d-e
+OUTPUT:
+temp1=a-b
+temp2=temp1+c
+temp3=d-e
+temp4=c
+temp5=temp3
